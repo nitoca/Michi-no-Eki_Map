@@ -1,39 +1,19 @@
 let pro_data
 
-// GETリクエストを送信
+// send request to get json data
 $.get(
-        "https://fuseki.open.coins.tsukuba.ac.jp/lod/",	// エンドポイント
-        {query:"select distinct ?o1 ?o ?o2 ?o3 ?URL where { ?s <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?o . ?s <http://linkdata.org/property/rdf1s9420i#prefectures> ?o1 . ?s <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?o2 . ?s <http://www.w3.org/2000/01/rdf-schema#label> ?o3 . ?s <http://xmlns.com/foaf/0.1/homepage> ?URL . }"},	// クエリ(説明文と画像を最大20件まで要求)
-        success,	// 返ってきたデータを処理する関数
-        "json"	// 返ってきてほしいデータの形式
+        "https://fuseki.open.coins.tsukuba.ac.jp/lod/",	// end point
+        {query:"select distinct ?o1 ?o ?o2 ?o3 ?URL where { ?s <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?o . ?s <http://linkdata.org/property/rdf1s9420i#prefectures> ?o1 . ?s <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?o2 . ?s <http://www.w3.org/2000/01/rdf-schema#label> ?o3 . ?s <http://xmlns.com/foaf/0.1/homepage> ?URL . }"},	// query
+        success,	// function(process data) 
+        "json"	// type
 );
 
-// getリクエストで得たdataを処理する
+// process json data from get
 function success(data) {
-
-
-        // 文字列に変換
+        // convert json data to javascript object
         var html = JSON.stringify(data);
 
-
-        // そのまま表示
-        // $("#disp").html(html);
-
-
-        // console.log(html);
         pro_data = JSON.parse(html);
-        console.log(pro_data);
-        // $("#disp").html(JSON.parse(html));
-
-        var lat = pro_data.results.bindings[0].o.value;
-        var lng = pro_data.results.bindings[0].o2.value;
-        var prefecture = pro_data.results.bindings[0].o1.value;
-        var name = pro_data.results.bindings[0].o3.value;
-        console.log(lat);
-        console.log(lng);
-        console.log(prefecture);
-        console.log(name);
-
 }
 
 var map;
@@ -62,19 +42,10 @@ function render(prefecture) {
             var lng = pro_data.results.bindings[i].o2.value;
             var name = pro_data.results.bindings[i].o3.value;
             var url = pro_data.results.bindings[i].URL.value;
-            console.log(lat);
-            console.log(lng);
-            console.log(name);
+
             var marker = L.marker([lat, lng]).addTo(map);
-            if(url !== ""){
-                marker.bindPopup(name.link(url)).openPopup();
-            }
-            else {
-                console.log("no url");
-                marker.bindPopup(name).openPopup();
-            }
-            console.log("a");
-        //     marker.bindPopup(name.link(url)).openPopup();
+            marker.bindPopup(name.link(url)).openPopup();
+            
             
           }
         }
