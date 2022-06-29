@@ -55,7 +55,7 @@ function render(prefecture) {
 
 // Mapの初期化
 function initMap() {
-        map = L.map('gmap').setView([35.619, 139.751], 8);
+        map = L.map('gmap').setView([35.619, 139.751], 9);
       
         // 地理院地図レイヤー追加
         L.tileLayer(
